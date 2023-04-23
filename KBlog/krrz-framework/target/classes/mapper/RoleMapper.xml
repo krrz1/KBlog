@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.krrz.mapper.RoleMapper">
+    <select id="selectRoleKeysByUserId" resultType="java.lang.String">
+        SELECT
+            r.role_key
+        FROM
+            sys_user_role ur LEFT JOIN sys_role r on ur.role_id= r.id
+        WHERE
+            ur.user_id=#{id} AND r.`status`=0 AND r.del_flag=0;
+    </select>
+    <update id="updateStatusById">
+        update sys_role set `status` = 1-`status` where id=#{id}
+    </update>
+    <update id="deleteById">
+        update sys_role set del_flag = 1 where id =#{id};
+    </update>
+</mapper>

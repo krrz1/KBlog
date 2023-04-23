@@ -1,0 +1,32 @@
+server:
+  port: 7777
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:mysql://mysql:3306/kblog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 18959897376
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 5MB
+  redis:
+#    url: redis://:18959897376@175.178.70.14:6379
+    url: redis://:18959897376@redis:6379
+mybatis-plus:
+  configuration:
+    # 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+oss:
+  accessKey: uataTueDnDxk9P7LMeJi8r2bTbUEUMuS_1YfHbiO
+  secretKey: i-eCNLCkgx1KSVnmIO0GaVlCWKBg_0KL0KAOb48k
+  bucket: krrz
