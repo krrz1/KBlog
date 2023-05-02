@@ -504,15 +504,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'kr', 'krrz', '$2a$10$Jnq31rRkNV3RNzXe0REsEOSKaYK8UgVZZqlNlNXqn.JeVcj2NdeZy', '1', '0', '1600753652@qq.com', '18888888888', '0', 'http://cdn.krrz.club/2023/04/20/dc9c3c053aab4320bd4ffe91fa855655.jpg', NULL, '2022-01-05 09:01:56', 1, '2022-01-30 15:37:03', 0);
-INSERT INTO `sys_user` VALUES (3, 'sg3', 'weqe', '$2a$10$ydv3rLkteFnRx9xelQ7elOiVhFvXOooA98xCqk/omh7G94R.K/E3O', '1', '0', '11@qq.com', '13355555555', '0', NULL, NULL, '2022-01-05 13:28:43', NULL, '2022-01-05 13:28:43', 0);
-INSERT INTO `sys_user` VALUES (4, 'sg2', 'dsadd', '$2a$10$kY4T3SN7i4muBccZppd2OOkhxMN6yt8tND1sF89hXOaFylhY2T3he', '1', '0', '23412332@qq.com', '19098790742', '0', NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `sys_user` VALUES (5, 'sg2233', 'tteqe', '', '1', '0', NULL, '18246845873', '1', NULL, NULL, '2022-01-06 03:51:13', NULL, '2022-01-06 07:00:50', 0);
-INSERT INTO `sys_user` VALUES (6, 'sangeng', 'sangeng', '$2a$10$Jnq31rRkNV3RNzXe0REsEOSKaYK8UgVZZqlNlNXqn.JeVcj2NdeZy', '1', '0', '2312321', '17777777777', '0', NULL, NULL, '2022-01-16 06:54:26', NULL, '2022-01-16 07:06:34', 0);
-INSERT INTO `sys_user` VALUES (14787164048662, 'weixin', 'weixin', '$2a$10$y3k3fnMZsBNihsVLXWfI8uMNueVXBI08k.LzWYaKsW8CW7xXy18wC', '0', '0', 'weixin@qq.com', NULL, NULL, NULL, -1, '2022-01-30 17:18:44', -1, '2022-01-30 17:18:44', 0);
-INSERT INTO `sys_user` VALUES (14787164048663, '12212', 'd11', '$2a$10$ptM.8rwjGWTHuQIilHC5v.bsDzTwYCqyFBZgmkK9QZIj7du50HpzG', '0', '0', '1111@qq.com', '13344444444', '0', NULL, NULL, NULL, NULL, NULL, 1);
-INSERT INTO `sys_user` VALUES (14787164048664, 'kk', 'kk', '$2a$10$A5yr4JryeLKyrh/XOZ/kXuNw3RZwd35QbqGZN4OCqXz23tK8kioMC', '0', '0', '123@qq.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `sys_user` VALUES (14787164048665, 'kk1', 'kk1', '$2a$10$4.Nh8ZH5zMulrVJ5/AVxCuKAfiKdOU0MUUiynNKoPqEabqXJdxCcq', '0', '0', '123@qq.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
+INSERT INTO `sys_user` VALUES (1, 'krrz', 'krrz', '#####', '1', '0', '1600753652@qq.com', '18888888888', '0', '#####', NULL, '2022-01-05 09:01:56', 1, '2022-01-30 15:37:03', 0);
+
 
 -- ----------------------------
 -- Table structure for sys_user_role
