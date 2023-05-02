@@ -26,6 +26,6 @@ mybatis-plus:
       logic-not-delete-value: 0
       id-type: auto
 oss:
-  accessKey: uataTueDnDxk9P7LMeJi8r2bTbUEUMuS_1YfHbiO
-  secretKey: i-eCNLCkgx1KSVnmIO0GaVlCWKBg_0KL0KAOb48k
-  bucket: krrz
+  accessKey: ###
+  secretKey: ###
+  bucket: ###
