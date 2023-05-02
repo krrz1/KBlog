@@ -16,6 +16,7 @@ import com.krrz.mapper.CommentMapper;
 import com.krrz.service.UserService;
 import com.krrz.utils.BeanCopyUtils;
 import com.krrz.utils.SecurityUtils;
+import com.krrz.utils.SensitiveFilter;
 import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +36,8 @@ import java.util.List;
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
 
     @Override
     public ResponseResult commentList(String type,Long articleId, Integer pageNum, Integer pageSize) {
@@ -68,6 +71,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         if(!StringUtils.hasText(comment.getContent())){
             throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
         }
+        //过滤敏感词
+        String commentText=comment.getContent();
+        String filter = sensitiveFilter.filter(commentText);
+        comment.setContent(filter);
+
         save(comment);
         return ResponseResult.okResult();
     }

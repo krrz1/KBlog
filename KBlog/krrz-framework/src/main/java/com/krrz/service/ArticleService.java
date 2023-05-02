@@ -7,6 +7,7 @@ import com.krrz.domain.dto.ArticleDetailAdminDto;
 import com.krrz.domain.dto.ListArticleDto;
 import com.krrz.domain.entity.Article;
 import com.krrz.domain.vo.ArticleDetailAdminVo;
+import com.krrz.domain.vo.ArticleDetailVo;
 
 public interface ArticleService extends IService<Article> {
     //查询热门文章封装成
@@ -14,7 +15,8 @@ public interface ArticleService extends IService<Article> {
 
     ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId);
 
-    ResponseResult getArticleDetail(Long id);
+    ArticleDetailVo getArticleDetail(Long id);
+    ArticleDetailVo queryWithLogicExpire(Long id);
 
     ResponseResult updateViewCount(Long id);
 

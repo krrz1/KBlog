@@ -11,8 +11,8 @@ spring:
       max-file-size: 2MB
       max-request-size: 5MB
   redis:
-    url: redis://:18959897376@redis:6379
-#    url: redis://:18959897376@175.178.70.14:6379
+    url: redis://:18959897376@175.178.70.14:6379
+#    url: redis://:18959897376@redis:6379
 mybatis-plus:
   configuration:
     # 日志

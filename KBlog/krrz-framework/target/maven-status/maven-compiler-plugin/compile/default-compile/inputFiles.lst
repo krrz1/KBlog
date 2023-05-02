@@ -1,4 +1,6 @@
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\mapper\TagMapper.java
+D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\constans\RedisConstants.java
+D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\utils\SensitiveFilter.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\dto\TagUpdateDto.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\ResponseResult.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\vo\HotArticleVo.java
@@ -9,6 +11,7 @@ D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\handler\security\Ac
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\utils\SecurityUtils.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\dto\UpdateUserDto.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\config\JwtUtil.java
+D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\utils\RedisData.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\entity\Menu.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\entity\LoginUser.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\vo\MenuVo.java
@@ -75,7 +78,6 @@ D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\enums\AppHttpCodeEn
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\domain\vo\RoutersVo.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\constans\SystemConstants.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\service\UserService.java
-D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\service\impl\ArticleServiceImpl2.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\utils\IsAdminUtils.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\service\impl\UserDetailsServiceImpl.java
 D:\IDEAworkspace\KBlog\krrz-framework\src\main\java\com\krrz\service\impl\LinkServiceImpl.java

@@ -2,6 +2,7 @@ package com.krrz.controller;
 
 import com.krrz.domain.ResponseResult;
 import com.krrz.domain.entity.Article;
+import com.krrz.domain.vo.ArticleDetailVo;
 import com.krrz.service.ArticleService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ public class ArticleController {
     }
     @GetMapping("/{id}")
     public ResponseResult getArticleDetail(@PathVariable("id") Long id){
-        return articleService.getArticleDetail(id);
+        ArticleDetailVo articleDetailVo =articleService.queryWithLogicExpire(id);
+        //封装响应返回
+        return ResponseResult.okResult(articleDetailVo);
     }
     @PutMapping("/updateViewCount/{id}")
     public ResponseResult updateViewCount(@PathVariable("id") Long id){

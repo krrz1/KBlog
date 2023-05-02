@@ -1,9 +1,14 @@
 package com.krrz.service.impl;
 
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.db.Db;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.krrz.config.RedisCache;
+import com.krrz.constans.RedisConstants;
 import com.krrz.constans.SystemConstants;
 import com.krrz.domain.ResponseResult;
 import com.krrz.domain.dto.AddArticleDto;
@@ -20,15 +25,21 @@ import com.krrz.service.ArticleTagService;
 import com.krrz.service.CategoryService;
 import com.krrz.service.CommentService;
 import com.krrz.utils.BeanCopyUtils;
+import com.krrz.utils.RedisData;
 import io.swagger.models.auth.In;
+import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import cn.hutool.core.util.StrUtil;
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,20 +53,66 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleTagService articleTagService;
     @Autowired
     private CommentService commentService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    class Heap{
+        private Heap leaf;
+        private Heap right;
+        private Map.Entry<String ,Object> value;
+        public Heap(){
+            leaf=null;
+            right=null;
+        }
+        public Heap(Map.Entry<String ,Object> value){
+            this.value=value;
+            leaf=null;
+            right=null;
+        }
+    }
     @Override
     public ResponseResult hostArticleList() {
-        //查询热门文章封装成
-        LambdaQueryWrapper<Article> wrapper=new LambdaQueryWrapper<>();
-        //封装查询条件
-        //正式文章
-        wrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
-        //按照浏览量排序
-        wrapper.orderByDesc(Article::getViewCount);
-        //最多只查询10跳
-        Page<Article> page=new Page<>(1,10);
-        page(page,wrapper);
-        List<Article> articles=page.getRecords();
-        //bean 拷贝
+//        //查询热门文章封装成
+//        LambdaQueryWrapper<Article> wrapper=new LambdaQueryWrapper<>();
+//        //封装查询条件
+//        //正式文章
+//        wrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+//        //按照浏览量排序
+//        wrapper.orderByDesc(Article::getViewCount);
+//        //最多只查询10跳
+//        Page<Article> page=new Page<>(1,10);
+//        page(page,wrapper);
+//        List<Article> articles=page.getRecords();
+//        //bean 拷贝
+//        List<HotArticleVo> articleVos = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
+
+        //小根堆实现TopK
+        Map<String, Integer> viewCountMap = redisCache.getCacheMap("article:viewCount");
+        List<Map.Entry<String, Integer>> list=new ArrayList<>();
+        for(Map.Entry<String, Integer> entry:viewCountMap.entrySet()){
+            list.add(entry);
+        }
+        PriorityQueue<Map.Entry<String ,Integer>> priorityQueue=new PriorityQueue<>(
+                (o1,o2) -> o1.getValue()-o2.getValue()
+        );
+        int maxSize= list.size()>5?5:list.size();
+        for(int i=0;i<maxSize;i++){
+            priorityQueue.offer(list.get(i));
+        }
+        for(int i=6;i<list.size();i++){
+            if(list.get(i).getValue() >priorityQueue.peek().getValue()){
+                priorityQueue.poll();
+                priorityQueue.offer(list.get(i));
+            }
+        }
+        //将得到的Id去数据库查询后存入
+        List<Article> articles=new ArrayList<>();
+        for(int i=maxSize-1;i>=0;i--){
+            Map.Entry<String, Integer> poll = priorityQueue.poll();
+            String id=poll.getKey();
+            Article article = getById(Integer.valueOf(id));
+            articles.add(article);
+        }
+        Collections.reverse(articles);
         List<HotArticleVo> articleVos = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
 
         return ResponseResult.okResult(articleVos);
@@ -101,8 +158,88 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResponseResult.okResult(pageVo);
     }
 
+
+    private static final ExecutorService CACHE_REBUILD_EXECUTOR= Executors.newFixedThreadPool(10);
+
+    /*
+     *@Description:  逻辑过期日期  优化并发查询
+     *@Params:
+     *@Return:
+     *@Author:krrz
+     *@Date:2023/4/26
+     */
+    public ArticleDetailVo queryWithLogicExpire(Long id){
+        String key= RedisConstants.article_id +id;
+        //从redis查询商户缓存
+        String json = stringRedisTemplate.opsForValue().get(key);
+        //判断是否存在
+        if (StrUtil.isBlank(json)) {
+            //存在 直接返回
+            return null;
+        }
+        //命中  需要先把json反序列化为对象
+        RedisData redisData = JSONUtil.toBean(json, RedisData.class);
+        JSONObject data = (JSONObject) redisData.getData();
+        ArticleDetailVo r = JSONUtil.toBean(data, ArticleDetailVo.class);
+        LocalDateTime expireTime=redisData.getExpireTime();
+        //判断  是否过期
+        if(expireTime.isAfter(LocalDateTime.now())){
+            //未过期 ,直接返回店铺信息
+            return r;
+        }
+        //已过期， 需要缓存重建
+        //缓存重建
+        //获取互斥锁
+        String lockKey=RedisConstants.LOCK_ARTICLE_KEY+id;
+        boolean isLock = tryLock(lockKey);
+        //判断是否获取所成功
+        if(isLock){
+            //再次看一下缓存有没有过期
+            String shopJson=stringRedisTemplate.opsForValue().get(key);
+            RedisData redisData2 = JSONUtil.toBean(shopJson, RedisData.class);
+            JSONObject data2 = (JSONObject) redisData2.getData();
+            ArticleDetailVo r2 = JSONUtil.toBean(data2, ArticleDetailVo.class);
+            LocalDateTime expireTime2=redisData2.getExpireTime();
+            //判断  是否过期
+            if(expireTime.isAfter(LocalDateTime.now())){
+                //未过期 ,直接返回店铺信息
+                return r2;
+            }
+            //成功，开启独立线程 实现缓存重建
+            CACHE_REBUILD_EXECUTOR.submit(()->{
+                try {
+                    //重建缓存
+                    ArticleDetailVo apply = getArticleDetail(id);
+                    this.setWithLogicalExpire(key,apply,20l,TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }finally {
+                    //释放所
+                    unlock(lockKey);
+                }
+            });
+        }
+        //返回过期商品信息
+        return r;
+    }
+    private boolean tryLock(String key){
+        Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.MINUTES);
+        return BooleanUtil.isTrue(flag);
+    }
+
+    private boolean unlock(String key){
+        Boolean flag = stringRedisTemplate.delete(key);
+        return BooleanUtil.isTrue(flag);
+    }
+    public void setWithLogicalExpire (String key, Object value, Long time, TimeUnit unit){
+        RedisData redisData=new RedisData();
+        redisData.setData(value);
+        redisData.setExpireTime(LocalDateTime.now().plusSeconds(unit.toSeconds(time)));
+        stringRedisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(redisData));
+    }
+
     @Override
-    public ResponseResult getArticleDetail(Long id) {
+    public ArticleDetailVo getArticleDetail(Long id) {
         //根据id查询文章
         Article article = getById(id);
         //从redis获得viewCount
@@ -117,7 +254,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleDetailVo.setCategoryName(category.getName());
         }
         //封装响应返回
-        return ResponseResult.okResult(articleDetailVo);
+        return articleDetailVo;
     }
 
     @Override
@@ -143,6 +280,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         redisCache.setCacheMap("article:viewCount",ViewCountMap);
         //将新关联项存入数据库
         articleTagService.saveBatch(articleTags);
+        //逻辑过期存入redis
+        article.setViewCount(0l);
+        //转换为VO
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
+        //根据分类id查询分类名
+        Long categoryId = articleDetailVo.getCategoryId();
+        Category category=categoryService.getById(categoryId);
+        if(category!=null){
+            articleDetailVo.setCategoryName(category.getName());
+        }
+        this.setWithLogicalExpire(RedisConstants.article_id+articleDetailVo.getId(),articleDetailVo,20l,TimeUnit.SECONDS);
+
         return ResponseResult.okResult();
     }
 
@@ -161,6 +310,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
         return ResponseResult.okResult(new PageVo(articleListVos,page.getTotal()));
     }
+
+
 
     @Override
     public ArticleDetailAdminVo queryArticleById(Long id) {
@@ -202,7 +353,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Map<String , Integer> ViewCountMap = articles.stream()
                 .collect(Collectors.toMap(article -> article.getId().toString(), article -> article.getViewCount().intValue()));
         //存储到redis
+        redisCache.deleteObject("article:viewCount");
         redisCache.setCacheMap("article:viewCount",ViewCountMap);
+        //改变逻辑存储
+        stringRedisTemplate.delete(RedisConstants.article_id+articleDetailAdminDto.getId());
+        newArticle.setViewCount(Long.valueOf(ViewCountMap.get(newArticle.getId().toString())));
+        //转换为VO
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(newArticle, ArticleDetailVo.class);
+        //根据分类id查询分类名
+        Long categoryId = articleDetailVo.getCategoryId();
+        Category category=categoryService.getById(categoryId);
+        if(category!=null){
+            articleDetailVo.setCategoryName(category.getName());
+        }
+        this.setWithLogicalExpire(RedisConstants.article_id+articleDetailVo.getId(),articleDetailVo,20l,TimeUnit.SECONDS);
     }
 
     @Override
@@ -213,5 +377,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagService.deleteTagByArticleId(id);
         //删除有关评论 逻辑删除
         commentService.deleteCommentByArticleId(id);
+        //删除redis逻辑
+        stringRedisTemplate.delete(RedisConstants.article_id+id);
+        stringRedisTemplate.opsForHash().delete("article:viewCount",id.toString());
     }
 }
