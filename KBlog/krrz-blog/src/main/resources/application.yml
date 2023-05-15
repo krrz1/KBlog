@@ -5,7 +5,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:mysql://mysql:3306/kblog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://####
     username: root
     password: #####
     driver-class-name: com.mysql.cj.jdbc.Driver
