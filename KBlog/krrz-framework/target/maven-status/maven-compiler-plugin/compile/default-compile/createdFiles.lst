@@ -110,6 +110,7 @@ com\krrz\mapper\MenuMapper.class
 com\krrz\service\impl\RoleServiceImpl.class
 com\krrz\mapper\LinkMapper.class
 com\krrz\service\impl\CommentServiceImpl.class
+com\krrz\domain\dto\DeleteCommentDto.class
 com\krrz\domain\vo\GetCategoryVo.class
 com\krrz\domain\entity\Article.class
 com\krrz\domain\entity\Link.class

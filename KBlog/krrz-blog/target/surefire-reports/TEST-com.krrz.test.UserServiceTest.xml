@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="7" failures="0" name="com.krrz.test.UserServiceTest" time="0" errors="0" skipped="0">
+  <properties>
+    <property name="idea.version" value="2021.3.1"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="D:\Program Files\Java\jdk1.8\jre\bin"/>
+    <property name="java.vm.version" value="25.201-b09"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="maven.multiModuleProjectDirectory" value="D:\IDEAworkspace\KBlog"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="CN"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="D:\IDEAworkspace\KBlog"/>
+    <property name="java.runtime.version" value="1.8.0_201-b09"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="D:\Program Files\Java\jdk1.8\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\krrz\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="maven.ext.class.path" value="D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\plugins\maven\lib\maven-event-listener.jar"/>
+    <property name="classworlds.conf" value="D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\plugins\maven\lib\maven3\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="GBK"/>
+    <property name="java.library.path" value="D:\Program Files\Java\jdk1.8\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\Program Files\Eclipse Adoptium\jdk-8.0.372.7-hotspot\\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\mingw-w64\mingw64\bin;D:\MATLAB\R2018a\runtime\win64;D:\MATLAB\R2018a\bin;D:\Program Files\MySQL\MySQL8.0.27\bin;D:\Program Files\NetSarang\Xshell 7\;D:\Program Files\NetSarang\Xftp 7\;D:\LINGO64_18\;D:\apache-maven-3.8.6\bin\;D:\Program Files\nodejs\;D:\opencv\build\x64\vc15\bin;D:\Program Files\Go\bin;D:\Program Files\Go\bin;D:\Go_WorkSpace\;D:\Program Files\Git\cmd;D:\gradle-8.1.1\bin;D:\Program Files\VisualSVN Server\bin;D:\Program\python\python3.11.0\Scripts\;D:\Program\python\python3.11.0\;C:\Users\krrz\AppData\Local\Microsoft\WindowsApps;D:\IntelliJ IDEA Community Edition 2021.2.2\bin;D:\Microsoft VS Code\bin;D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\bin;D:\Program Files\nodejs\node_global;D:\Program Files\JetBrains\GoLand 2022.3.1\bin;C:\Users\krrz\go\bin;C:\Users\krrz\AppData\Local\gitkraken\bin;;."/>
+    <property name="maven.conf" value="D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\plugins\maven\lib\maven3/conf"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="user.home" value="C:\Users\krrz"/>
+    <property name="user.timezone" value="Asia/Shanghai"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="user.name" value="krrz"/>
+    <property name="java.class.path" value="D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\plugins\maven\lib\maven3\boot\plexus-classworlds-2.6.0.jar;D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\plugins\maven\lib\maven3\boot\plexus-classworlds.license;D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\lib\idea_rt.jar"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="D:\Program Files\Java\jdk1.8\jre"/>
+    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version=2021.3.1 -s D:\apache-maven-3.8.6\conf\settings.xml install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="zh"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_201"/>
+    <property name="java.ext.dirs" value="D:\Program Files\Java\jdk1.8\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="D:\Program Files\Java\jdk1.8\jre\lib\resources.jar;D:\Program Files\Java\jdk1.8\jre\lib\rt.jar;D:\Program Files\Java\jdk1.8\jre\lib\sunrsasign.jar;D:\Program Files\Java\jdk1.8\jre\lib\jsse.jar;D:\Program Files\Java\jdk1.8\jre\lib\jce.jar;D:\Program Files\Java\jdk1.8\jre\lib\charsets.jar;D:\Program Files\Java\jdk1.8\jre\lib\jfr.jar;D:\Program Files\Java\jdk1.8\jre\classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="D:\Program Files\JetBrains\IntelliJ IDEA 2021.3.1\plugins\maven\lib\maven3"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testDeleteById" time="0"/>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testUpdateInfo" time="0"/>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testUpdateUser" time="0"/>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testUserInfor" time="0"/>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testListUser" time="0"/>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testRegister" time="0"/>
+  <testcase classname="com.krrz.test.UserServiceTest" name="com.krrz.test.UserServiceTest.testAddUser" time="0"/>
+</testsuite>

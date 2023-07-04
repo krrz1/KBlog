@@ -30,6 +30,8 @@ import org.springframework.util.StringUtils;
 import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 用户表(User)表服务实现类
@@ -78,6 +80,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(!StringUtils.hasText(user.getEmail())){
             throw new SystemException(AppHttpCodeEnum.EMAILL_NOT_NULL);
         }
+        Matcher matcher = Pattern.compile("^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+").matcher(user.getEmail());
+        if(!matcher.matches()){
+            throw new SystemException(AppHttpCodeEnum.EMAILL_ERROR);
+        }
+        matcher=Pattern.compile("^(\\w){6,12}$").matcher(user.getPassword());
+        if(!matcher.matches()){
+            throw new SystemException(AppHttpCodeEnum.PASSWORD_ERROR);
+        }
         //对数据是否存在的判duan
         if(userNameExit(user.getUserName())){
             throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
@@ -88,7 +98,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //对密码进行加密
         String encodePassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
+        user.setAvatar("/static/img/tou.jpg");
         //存入数据库
+
         save(user);
         return ResponseResult.okResult();
     }
@@ -138,6 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         getBaseMapper().deleteById(id);
         //删除Role_User表的关联
         userRoleService.remove(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,id));
+        //删除
         return ResponseResult.okResult();
     }
 

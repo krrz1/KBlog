@@ -3,6 +3,8 @@ package com.krrz.domain.entity;
 import java.util.Date;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("sys_role")
 public class Role  {
-    //角色ID@TableId
+    //角色ID
+    @TableId
     private Long id;
 
     //角色名称
@@ -32,6 +35,7 @@ public class Role  {
     //角色状态（0正常 1停用）
     private String status;
     //删除标志（0代表存在 1代表删除）
+    @TableLogic
     private String delFlag;
     //创建者
     private Long createBy;

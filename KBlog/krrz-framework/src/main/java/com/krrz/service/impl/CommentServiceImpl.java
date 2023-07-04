@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.krrz.constans.SystemConstants;
 import com.krrz.domain.ResponseResult;
+import com.krrz.domain.dto.DeleteCommentDto;
 import com.krrz.domain.entity.Article;
 import com.krrz.domain.entity.Comment;
 import com.krrz.domain.entity.User;
@@ -61,9 +62,36 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             //查询对应子评论
             List<CommentVo> children=getChildren(commentVo.getId());
             commentVo.setChildren(children);
+
         }
         return ResponseResult.okResult(new PageVo(commentVos,page.getTotal()));
     }
+    private List<CommentVo> toCommentVoList(List<Comment> comments){
+        List<CommentVo> commentVos = BeanCopyUtils.copyBeanList(comments, CommentVo.class);
+        //遍历Vo集合
+        for (CommentVo commentVo : commentVos) {
+            String name= userService.getById(commentVo.getCreateBy()).getNickName();
+            commentVo.setUsername(name);
+            //设置头像
+            String avatar=userService.getById(commentVo.getCreateBy()).getAvatar();
+            commentVo.setAvatar(avatar);
+            if(commentVo.getToCommentUserId()!=-1){
+                String nickName = userService.getById(commentVo.getToCommentUserId()).getNickName();
+                commentVo.setToCommentUserName(nickName);
+            }
+        }
+        return commentVos;
+    }
+    private List<CommentVo> getChildren(Long id){
+        LambdaQueryWrapper<Comment> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getRootId,id);
+        wrapper.orderByAsc(Comment::getCreateTime);
+        List<Comment> list = list(wrapper);
+        List<CommentVo> commentVos = toCommentVoList(list);
+
+        return commentVos;
+    }
+
 
     @Override
     public ResponseResult addComment(Comment comment) {
@@ -85,27 +113,21 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         getBaseMapper().deleteCommentByArticleId(id);
     }
 
-    private List<CommentVo> toCommentVoList(List<Comment> comments){
-        List<CommentVo> commentVos = BeanCopyUtils.copyBeanList(comments, CommentVo.class);
-        //遍历Vo集合
-        for (CommentVo commentVo : commentVos) {
-            String name= userService.getById(commentVo.getCreateBy()).getNickName();
-            commentVo.setToCommentUserName(name);
-            if(commentVo.getToCommentUserId()!=-1){
-                String nickName = userService.getById(commentVo.getToCommentUserId()).getNickName();
-                commentVo.setToCommentUserName(nickName);
-            }
+    @Override
+    public ResponseResult deleteComment(DeleteCommentDto deleteCommentDto) {
+        //判断是否为根评论
+        Long rootId = deleteCommentDto.getRootId();
+        if(rootId==-1){
+            //如果为根评论  需要删除所有子评论  逻辑删除
+            getBaseMapper().deleteById(deleteCommentDto.getId());
+            LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Comment::getRootId,deleteCommentDto.getId());
+            getBaseMapper().delete(wrapper);
+            return new ResponseResult(200,"删除了根评论也删除了子评论");
         }
-        return commentVos;
+        getBaseMapper().deleteById(deleteCommentDto.getId());
+        return new ResponseResult(200,"删除了此条评论");
     }
-    private List<CommentVo> getChildren(Long id){
-        LambdaQueryWrapper<Comment> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(Comment::getRootId,id);
-        wrapper.orderByAsc(Comment::getCreateTime);
-        List<Comment> list = list(wrapper);
-        List<CommentVo> commentVos = toCommentVoList(list);
 
-        return commentVos;
-    }
 }
 

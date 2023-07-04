@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentVo {
     private Long id;
-
     //评论类型（0代表文章评论，1代表友链评论）
     private String type;
     //文章id
@@ -34,5 +33,8 @@ public class CommentVo {
     private String username;
 
     private List<CommentVo> children;
+
+    //头像
+    private String avatar;
 
 }

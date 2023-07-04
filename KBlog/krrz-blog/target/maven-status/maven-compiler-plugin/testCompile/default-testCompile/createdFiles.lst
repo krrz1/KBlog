@@ -1,3 +1,7 @@
-com\krrz\SensitiveTest.class
 com\krrz\OSStest.class
+com\krrz\test\UserServiceTest.class
 com\krrz\RedisTest.class
+com\krrz\test\CommentServiceTest.class
+com\krrz\SensitiveTest.class
+com\krrz\test\CategoryServiceTest.class
+com\krrz\test\ArticleServiceTest.class

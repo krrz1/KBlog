@@ -5,7 +5,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:mysql://mysql:3306/kblog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://175.178.70.14:3306/kblog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: 18959897376
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,7 +14,6 @@ spring:
       max-file-size: 2MB
       max-request-size: 5MB
   redis:
-#    url: redis://:18959897376@175.178.70.14:6379
     url: redis://:18959897376@redis:6379
 mybatis-plus:
   configuration:

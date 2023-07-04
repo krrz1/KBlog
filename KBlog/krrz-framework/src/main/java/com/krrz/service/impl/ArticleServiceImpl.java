@@ -110,6 +110,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             Map.Entry<String, Integer> poll = priorityQueue.poll();
             String id=poll.getKey();
             Article article = getById(Integer.valueOf(id));
+            article.setViewCount(Long.valueOf(poll.getValue()));
             articles.add(article);
         }
         Collections.reverse(articles);
@@ -134,10 +135,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         page(page,lambdaQueryWrapper);
         //查询categoryName
         List<Article> articles=page.getRecords();
-//        for (Article article : articles) {
-//            Category category=categoryService.getById(article.getCategoryId());
-//            article.setCategoryName(category.getName());
-//        }
+        for (Article article : articles) {
+            Category category=categoryService.getById(article.getCategoryId());
+            article.setCategoryName(category.getName());
+            article.setViewCount( Long.valueOf((String) stringRedisTemplate.opsForHash().get("article:viewCount",article.getId().toString())));
+        }
 //       articles.stream()
 //                .map(new Function<Article, Article>() {
 //                    @Override
@@ -148,8 +150,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //                        return article;
 //                    }
 //                }).collect(Collectors.toList());
-       articles.stream()
-               .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName())).collect(Collectors.toList());
+//       articles.stream()
+//               .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName())).collect(Collectors.toList());
         //封装查询结果                                                   数据地址一样
         List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
 

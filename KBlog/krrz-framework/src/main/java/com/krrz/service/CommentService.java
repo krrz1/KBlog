@@ -2,6 +2,7 @@ package com.krrz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.krrz.domain.ResponseResult;
+import com.krrz.domain.dto.DeleteCommentDto;
 import com.krrz.domain.entity.Comment;
 
 
@@ -18,4 +19,6 @@ public interface CommentService extends IService<Comment> {
     ResponseResult addComment(Comment comment);
 
     void deleteCommentByArticleId(Long id);
+
+    ResponseResult deleteComment(DeleteCommentDto deleteCommentDto);
 }

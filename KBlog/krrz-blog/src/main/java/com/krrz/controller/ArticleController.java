@@ -1,14 +1,11 @@
 package com.krrz.controller;
 
 import com.krrz.domain.ResponseResult;
-import com.krrz.domain.entity.Article;
 import com.krrz.domain.vo.ArticleDetailVo;
 import com.krrz.service.ArticleService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/article")

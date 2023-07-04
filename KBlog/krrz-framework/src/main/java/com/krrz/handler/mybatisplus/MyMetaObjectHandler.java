@@ -17,16 +17,17 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         } catch (Exception e) {
             e.printStackTrace();
             userId = -1L;//表示是自己创建
+        }finally {
+            this.setFieldValByName("createTime", new Date(), metaObject);
+            this.setFieldValByName("updateTime", new Date(), metaObject);
         }
-        this.setFieldValByName("createTime", new Date(), metaObject);
         this.setFieldValByName("createBy",userId , metaObject);
-        this.setFieldValByName("updateTime", new Date(), metaObject);
         this.setFieldValByName("updateBy", userId, metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName("updateTime", new Date(), metaObject);
-        this.setFieldValByName(" ", SecurityUtils.getUserId(), metaObject);
+        this.setFieldValByName("updateBy", SecurityUtils.getUserId(), metaObject);
     }
 }

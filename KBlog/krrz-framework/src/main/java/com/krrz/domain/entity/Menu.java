@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,8 @@ import lombok.experimental.Accessors;
 @TableName("sys_menu")
 @Accessors(chain = true) //set 有返回值  返回当前对象本身
 public class Menu  {
-    //菜单ID@TableId
+    //菜单ID
+    @TableId
     private Long id;
 
     //菜单名称
@@ -61,7 +63,7 @@ public class Menu  {
     private Date updateTime;
     //备注
     private String remark;
-    
+    @TableLogic
     private String delFlag;
     @TableField(exist = false)
     private List<Menu> children;
